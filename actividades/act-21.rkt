@@ -37,7 +37,7 @@
           [(< (/ weight (* height height)) 20) 'underweight]
           [(< (/ weight (* height height)) 25) 'normal]
           [(< (/ weight (* height height)) 30) 'obese1]
-          [(< (/ weight (* height height)) 35) 'obese2]
+          [(< (/ weight (* height height)) 40) 'obese2]
           [else 'obese3])))
 
 ;; Problema 5
@@ -54,7 +54,7 @@
   (lambda (lst)
     (cond 
       [(empty? lst) '()]
-      [(cons (list (car lst) (car lst)) (duplicate (cdr lst)))])))
+      [else (cons (list (car lst) (car lst)) (duplicate (cdr lst)))])))
 
 ;; Problema 7
 
@@ -73,7 +73,7 @@
       [(= n 0) 0]
       [(= n 1) 1]
       [(= n 2) 1]
-      [(+ (fib (- n 1)) (fib (- n 2)))])))
+      [else (+ (fib (- n 1)) (fib (- n 2)))])))
 
 ;; Problema 9
 
@@ -81,7 +81,7 @@
   (lambda (lst)
     (cond
       [(empty? lst) '()]
-      [(cons (list (car lst)) (enlist (cdr lst)))])))
+      [else (cons (list (car lst)) (enlist (cdr lst)))])))
 
 ;; Problema 10
 
@@ -98,9 +98,9 @@
   (lambda (lst)
     (cond
       [(empty? lst) 0]
-      [(+ (car lst) (add-list (cdr lst)))])))
+      [else (+ (car lst) (add-list (cdr lst)))])))
 
-;; Problema 12 -> no funciona
+;; Problema 12
 
 ;; La funcion invert-pairs toma como entrada una 
 ;; lista cuyo contenido son listas de dos elementos. 
@@ -125,7 +125,7 @@
 
 
 
-;; Problema 13 -> no terminada
+;; Problema 13
 
 ;;; La funcion de list-of-symbols? toma una lista 
 ;;; lst como entrada. Devuelve verdadero si todos los 
@@ -154,8 +154,8 @@
   (lambda (a b lst)
     (cond
       [(empty? lst) '()]
-      [(= (car lst) a) (cons b (swapper a b (cdr lst)))]
-      [(= (car lst) b) (cons a (swapper a b (cdr lst)))]
+      [(eq? (car lst) a) (cons b (swapper a b (cdr lst)))]
+      [(eq? (car lst) b) (cons a (swapper a b (cdr lst)))]
       [else (cons (car lst) (swapper a b (cdr lst)))])))
 
 ;; Problema 15
@@ -174,7 +174,7 @@
   (lambda (a b)
     (cond
       [(empty? a) 0]
-      [+ (* (car a) (car b)) (dot-product (cdr a) (cdr b))])))
+      [else (+ (* (car a) (car b)) (dot-product (cdr a) (cdr b)))])))
 
 
 ;; Problema 16
@@ -190,7 +190,7 @@
   (lambda(lst)
     (cond
       [(empty? lst) 0]
-      [(/ (add-list lst) (length lst))])))
+      [else (/ (add-list lst) (length lst))])))
 
 
 ;; Problema 17
