@@ -1,0 +1,27 @@
+.reserved-word{
+    color: #0000FF;
+}
+
+.operator{
+    color: #ff0000;
+}
+
+.indentifier{
+    color: #268010;
+}
+
+.integer{
+    color: #a71896;
+}
+
+.float{
+    color: #4000ff;
+}
+
+.string{
+    color: #000000;
+}
+
+.comment{
+    color: #757575;
+}
