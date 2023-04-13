@@ -1,0 +1,105 @@
+#lang racket
+
+(require racket/file)
+
+;; Authors
+;; - Daniel Hurtado (A01707774)
+;; - Carlos Velasco (A01708634)
+
+;; Definición de las expresiones regulares para las categorías léxicas en C#
+(define reserved-words-regexp (regexp "(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|virtual|void|volatile|while|add|alias|ascending|async|await|descending|dynamic|from|get|global|group|into|join|let|orderby|partial|remove|select|set|value|var|where|yield)\\b"))
+
+(define operators-regexp (regexp "(\\+\\+|--|->|==|!=|<=|>=|&&|\\|\\||<<|>>|\\+=|-=|\\*=|/=|%=|&=|\\|=|\\^=|<<=|>>=|=>|\\?|:|\\||&|!|~|\\^|\\*|\\/|%|\\+|-|<|>|=|\\.|,|;|\\{|\\}|\\[|\\]|\\(|\\))"))
+
+(define identifiers-regexp (regexp "\\b[a-zA-Z_]\\w*\\b"))
+
+(define integers-regexp (regexp "\\b\\d+\\b"))
+
+(define floats-regexp (regexp "\\b\\d+\\.\\d+f?\\b"))
+
+(define strings-regexp (regexp "\"[^\"]*\""))
+
+(define single-line-comments-regexp (regexp "//[^\n]*"))
+
+(define multi-line-comments-regexp (regexp "/\\*[^\\*]*\\*+([^/][^\\*]*\\*+)*/"))
+
+;;Función para clasificar un token según su tipo
+(define (classify-token token)
+  (cond
+    [(regexp-match? reserved-words-regexp token) 'reserved-word]
+    [(regexp-match? operators-regexp token) 'operator]
+    [(regexp-match? identifiers-regexp token) 'identifier]
+    [(regexp-match? integers-regexp token) 'integer]
+    [(regexp-match? floats-regexp token) 'float]
+    [(regexp-match? strings-regexp token) 'string]
+    [(regexp-match? single-line-comments-regexp token) 'comment]
+    [(regexp-match? multi-line-comments-regexp token) 'comment]
+    [else #f]))
+
+;; Funcion para resaltar el token
+(define (highlight-token token token-type)
+  (cond
+    [(eq? token-type 'reserved-word) (format "<span class=\"reserved-word\">~a</span>" token)]
+    [(eq? token-type 'operator) (format "<span class=\"operator\">~a</span>" token)]
+    [(eq? token-type 'identifier) (format "<span class=\"identifier\">~a</span>" token)]
+    [(eq? token-type 'integer) (format "<span class=\"integer\">~a</span>" token)]
+    [(eq? token-type 'float) (format "<span class=\"float\">~a</span>" token)]
+    [(eq? token-type 'string) (format "<span class=\"string\">~a</span>" token)]
+    [(eq? token-type 'comment) (format "<span class=\"comment\">~a</span>" token)]
+    [else token]))
+
+
+;; Función para resaltar las categorías léxicas en un código fuente en C#
+(define (tokenize-csharp input)
+  (define tokens (regexp-match* #rx"(\\s+|\\b|\\B)" input))
+  (define tokenized-tokens (map (lambda (token)
+                                  (let ((token-type (classify-token token)))
+                                    (if token-type
+                                        (highlight-token token token-type)
+                                        token)))
+                                tokens))
+  (string-join tokenized-tokens))
+
+
+;; Función para leer un archivo de texto
+(define (read-file file-name)
+  (with-input-from-file file-name (lambda () (read-string))))
+
+;; Función para escribir un archivo HTML
+(define (write-html-file file-name html-content)
+  (with-output-to-file file-name
+    (λ () (display html-content))
+    #:exists 'replace))
+
+;; Función para convertir un archivo en C# a un archivo HTML con resaltado de sintaxis
+(define (csharp-to-html input-file-name output-file-name)
+  (define csharp-code (read-file input-file-name))
+  (define highlighted-code (classify-token csharp-code))
+  
+  (define html-template
+    "<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+  <meta charset=\"UTF-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+  <title>C# Code Highlighting</title>
+  <style>
+    body { font-family: monospace; white-space: pre; }
+    .reserved-word { color: blue; }
+    .operator { color: red; }
+    .identifier { color: black; }
+    .integer { color: magenta; }
+    .float { color: magenta; }
+    .string { color: green; }
+    .comment { color: gray; }
+  </style>
+</head>
+<body>
+  ~a
+</body>
+</html>")
+  
+  (define html-content (format html-template highlighted-code))
+  (write-html-file output-file-name html-content))
+
+(csharp-to-html "input.cs" "output.html")

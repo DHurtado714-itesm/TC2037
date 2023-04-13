@@ -34,6 +34,8 @@
     "number" "number"
     "integer" "integer"
     "identifier" "identifier"
+    "block-comment-start" "comment" ; Agrega esta línea
+    "block-comment-end" "comment" ; Agrega esta línea
     )
 )
 ;;Función para clasificar un token según su tipo
