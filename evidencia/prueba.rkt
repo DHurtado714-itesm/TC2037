@@ -9,9 +9,15 @@
 ;; Definición de las expresiones regulares para las categorías léxicas en C#
 (define keywords
   (list 
-    "abstract" "as" "base" "bool" "break" "byte" "case" "catch" "char" "checked" "class" "const" "continue" "decimal" "default" "delegate" "do" "double" "else" "endif" "enum" "event" "explicit" "extern" "false" "finally" "fixed" "float" "for" "foreach" "goto" "if" "implicit" "in" "int" "interface" "internal" "is" "lock" "long" "namespace" "new" "null" "object" "operator" "out" "override" "params" "private" "protected" "public" "readonly" "ref" "return" "sbyte" "sealed" "short" "sizeof" "stackalloc" "static" "string" "struct" "switch" "this" "throw" "true" "try" "typeof" "uint" "ulong" "unchecked" "unsafe" "ushort" "using" "virtual" "void" "volatile" "while" "#if" "#endif" "#else"
+    "abstract" "as" "base" "bool" "byte"  "catch" "char" "checked" "class" "const" "decimal" "delegate" "double" "enum" "event" "explicit" "extern" "false" "finally" "fixed" "float" "implicit" "in" "int" "interface" "internal" "is" "lock" "long" "namespace" "new" "null" "object" "operator" "out" "override" "params" "private" "protected" "public" "readonly" "ref" "sbyte" "sealed" "short" "sizeof" "stackalloc" "static" "string" "struct" "this" "throw" "true" "try" "typeof" "uint" "ulong" "unchecked" "unsafe" "ushort" "using" "virtual" "void" "volatile" "#if" "#endif" "#else"
    )
 )
+
+(define loops-conditionals
+  (list
+   "while" "switch" "do" "foreach" "break" "continue" "default" "goto" "return" "if" "case" "else" "for" "endif"
+   )
+ )
 
 (define operators
     (list
@@ -31,6 +37,8 @@
     "delimiter" "delimiter"
     "comment" "comment"
     "string" "string"
+    "loops-conditionals" "loops-conditionals"
+    "float" "float"
     "number" "number"
     "integer" "integer"
     "identifier" "identifier"
@@ -43,8 +51,11 @@
   (cond
     [(member token keywords) 'reserved-word]
     [(member token operators) 'operator]
+    [(member token delimiters) 'delimiter]
+    [(member token loops-conditionals) 'loops-conditionals]
     [(regexp-match? #rx"^[a-zA-Z_][a-zA-Z0-9_]*$" token) 'identifier]
     [(regexp-match? #rx"^[0-9x]+$" token) 'integer]
+    [(regexp-match? #rx"[+-]?([0-9]*[.])?[0-9]+" token) 'float]
     [(regexp-match? #rx"^\".*\"$" token) 'string]
     [(regexp-match? #rx"//.*" token) 'comment]
     [(regexp-match? #rx"/\\*.*" token) 'block-comment-start]
@@ -71,7 +82,6 @@
 (define (tokenize-line line open-block-comment)
     (define tokenized-line '())
 
-    ; Split the line into tokens
     (define tokens (regexp-match* #px"([a-zA-Z_][a-zA-Z0-9_]*|//.*|/\\*.*|.*?\\*/|\\d+\\.?\\d*|\".*?\"|\\S)" line))
 
     (for ([token tokens])
@@ -145,16 +155,19 @@
   <style>
     body { font-family: monospace; white-space: pre; }
     .keyword { color: blue; }
-    .operator { color: black; }
+    .operator { color: white; }
+    .delimiter { color: #FCE907; }
     .identifier { color: green; }
-    .integer { color: red; }
-    .float { color: red; }
-    .string { color: orange; }
+    .integer { color: #A8DC03; }
+    .float { color: #A8DC03; }
+    .string { color: #E39000; }
     .comment { color: green; }
+    .loops-conditionals { color: magenta }
+    html { background-color: black; }
   </style>
 </head>
 <body>
-  ~a
+~a
 </body>
 </html>")
   
