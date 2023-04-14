@@ -7,7 +7,7 @@
 ;; - Carlos Velasco (A01708634)
 
 ;; Definición de las expresiones regulares para las categorías léxicas en C#
-(define keywords
+(define reserved-word
   (list 
     "abstract" "as" "base" "bool" "byte"  "catch" "char" "checked" "class" "const" "decimal" "delegate" "double" "enum" "event" "explicit" "extern" "false" "finally" "fixed" "float" "implicit" "in" "int" "interface" "internal" "is" "lock" "long" "namespace" "new" "null" "object" "operator" "out" "override" "params" "private" "protected" "public" "readonly" "ref" "sbyte" "sealed" "short" "sizeof" "stackalloc" "static" "string" "struct" "this" "throw" "true" "try" "typeof" "uint" "ulong" "unchecked" "unsafe" "ushort" "using" "virtual" "void" "volatile" "#if" "#endif" "#else"
    )
@@ -30,9 +30,10 @@
         "(" ")" "{" "}" "[" "]"
     )
 )
+
 (define colors
     (hash 
-    "keyword" "keyword"
+    "reserved-word" "reserved-word"
     "operator" "operator"
     "delimiter" "delimiter"
     "comment" "comment"
@@ -42,14 +43,15 @@
     "number" "number"
     "integer" "integer"
     "identifier" "identifier"
-    "block-comment-start" "comment" ; Agrega esta línea
-    "block-comment-end" "comment" ; Agrega esta línea
+    "block-comment-start" "comment"
+    "block-comment-end" "comment"
     )
 )
+
 ;;Función para clasificar un token según su tipo
 (define (classify-token token)
   (cond
-    [(member token keywords) 'reserved-word]
+    [(member token reserved-word) 'reserved-word]
     [(member token operators) 'operator]
     [(member token delimiters) 'delimiter]
     [(member token loops-conditionals) 'loops-conditionals]
@@ -67,7 +69,7 @@
   (cond
     [(equal? token-type 'reserved-word)
       (string-append "<span class=\""
-        (hash-ref colors "keyword") "\">" token "</span>")]
+        (hash-ref colors "reserved-word") "\">" token "</span>")]
 
     [(equal? token-type 'integer)
       (string-append "<span class=\""
@@ -75,7 +77,7 @@
 
     [else
       (string-append "<span class=\""
-      (hash-ref colors (symbol->string token-type)) "\">" token "</span>")])) 
+      (hash-ref colors (symbol->string token-type)) "\">" token "</span>")]))
 
 
 ;; Tokenize line
@@ -154,7 +156,7 @@
   <title>C# Code Highlighting</title>
   <style>
     body { font-family: monospace; white-space: pre; }
-    .keyword { color: blue; }
+    .reserved-word { color: blue; }
     .operator { color: white; }
     .delimiter { color: #FCE907; }
     .identifier { color: green; }
