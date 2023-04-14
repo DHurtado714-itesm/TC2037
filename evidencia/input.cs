@@ -14,7 +14,7 @@ namespace MyNamespace
 
             string myString = "Hello, world!";
             int myInt = 42;
-            float myFloat = 3.14f;
+            float myFloat = 3.14;
 
             if (myInt == 42 && myFloat < 4.0)
             {
