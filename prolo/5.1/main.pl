@@ -20,7 +20,9 @@
 lasto([], X) :- X = [].
 lasto([_|T], X) :- lasto(T, X).
 
-# Charly: usa esto como ejemplo para tus ejercicios (lo que puse no se si es correcto)
+% Queries de ejemplo
+% lasto([1,2,3,4], Result)
+% Result = 4.
 
 # Ejericio 2
 
@@ -33,14 +35,25 @@ lasto([_|T], X) :- lasto(T, X).
 # (run 1 (q) (butlasto '(1 2 3 4) '(1 2 3 4))) -> ()
 # (run 3 (p q) (butlasto p q)) -> (((_.0) ()) ((_.0 _.1) (_.0)) ((_.0 _.1 _.2) (_.0 _.1)))
 
-butlasto([_], []).
-butlasto([H|T], [H|R]) :- butlasto(T, R).
+lasto([X], X).
+
+lasto([_|Tail], X) :- lasto(Tail, X). 
+
 
 % Queries de ejemplo:
 % ?- butlasto([1, 2, 3, 4], X).
 % X = [1, 2, 3].
 
-# Ejericio 4
+# Ejercicio 3
+
+enlisto([], []). 
+enlisto([Head|Tail], [[Head]|Result]) :- enlisto(Tail, Result). 
+
+% Queries de ejemplo:
+% enlisto(q, [[a],[b],[c],[d]]).
+% false
+
+# Ejercicio 4
 
 duplicateo([], []).
 duplicateo([H|T], [H, H|R]) :- duplicateo(T, R).
@@ -48,6 +61,16 @@ duplicateo([H|T], [H, H|R]) :- duplicateo(T, R).
 % Queries de ejemplo:
 % ?- duplicateo([1, 2, 3], X).
 % X = [1, 1, 2, 2, 3, 3].
+
+# Ejercicio 5
+
+removeo(_, [], []).
+removeo(X, [X|T], T). 
+removeo(X, [Head|Tail], [Head|Result]) :- removeo(X, Tail, Result). 
+
+% Queries de ejemplo
+% ?- removeo(3, [1, 2, 3, 4, 5], Result).
+% Result = [1, 2, 4, 5] 
 
 # Ejercicio 6
 
@@ -58,6 +81,16 @@ reverseo_helper([H|T], Acc, R) :- reverseo_helper(T, [H|Acc], R).
 % ?- reverseo([1, 2, 3, 4], X).
 % X = [4, 3, 2, 1].
 
+# Ejercicio 7
+
+palindromeo([]). 
+palindromeo([_]). 
+palindromeo(List) :- reverse(List, List).
+
+% Queries de ejemplo:
+% ?- palindromeo([a,b,c,d,c,b,a]).true.
+% ?- palindromeo([a,b,c,d,e,f,g]).false.
+
 # Ejercicio 8
 
 rotateo([H|T], R) :- append(T, [H], R).
@@ -65,6 +98,25 @@ rotateo([H|T], R) :- append(T, [H], R).
 % Queries de ejemplo:
 % ?- rotateo([1, 2, 3, 4], X).
 % X = [2, 3, 4, 1].
+
+# Ejercicio 9
+
+evensizeo([]). %9
+evensizeo([_|T]) :- oddsizeo(T). %9
+
+oddsizeo([_]). %9
+oddsizeo([_|T]) :- evensizeo(T). %9
+
+% Queries de ejemplo
+% ?- evensizeo([a, b, c, d, e]).false.
+
+% ?- evensizeo([a, b, c, d]).true .
+
+% ?- oddsizeo([a,b,c,d,e]).
+% true .
+
+% ?- oddsizeo([a,b,c,d]).
+% false.
 
 # Ejercicio 10
 
@@ -75,6 +127,19 @@ splito([X, Y|T], [X|R1], [Y|R2]) :- splito(T, R1, R2).
 % Queries de ejemplo:
 % ?- splito([1, 2, 3, 4, 5], A, B).
 % A = [1, 3, 5], B = [2, 4].
+
+# Ejercicio 11
+
+swappero(_, _, [], []). 
+swappero(A, B, [A|T], [B|R]) :- swappero(A, B, T, R). 
+swappero(A, B, [B|T], [A|R]) :- swappero(A, B, T, R). 
+swappero(A, B, [H|T], [H|R]) :- dif(H, A), dif(H, B), swappero(A, B, T, R).
+
+% Queries de ejemplo
+% ?- swappero(purr, kitty, [soft,kitty,warm,kitty,little,ball,of,fur, happy, kitty, sleepy, kitty, purr, purr, purr], Result).
+% Result = [soft, purr, warm, purr, little, ball, of, fur, happy|...] 
+% ?- swappero(a, b, [a, b, a, b, b, b, a], Result).
+% Result = [b, a, b, a, a, a, b]
 
 # Ejercicio 12
 
@@ -87,6 +152,15 @@ equalo([H, H|T]) :- equalo([H|T]).
 % true.
 % ?- equalo([1, 1, 1, 2]).
 % false.
+
+# Ejercicio 13
+
+subseto([], _). %13
+subseto([H|T], B) :- member(H, B), subseto(T, B). %13
+
+% Queries de ejemplo
+% ?- subseto([b,d], [a,b,c,d,e]).true .
+% ?- subseto([a,b,c,d,e],[a,b,c,d]).false.
 
 # Ejercicio 14
 
