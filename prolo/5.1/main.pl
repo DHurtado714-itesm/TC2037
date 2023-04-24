@@ -98,16 +98,15 @@ removeo(X, [Head|Tail], [Head|Result]) :- removeo(X, Tail, Result).
 # (run 1 (q) (reverseo q '(a b c d))) -> ((d c b a))
 # (run 1 (q) (reverseo '(a b c d) '(e d c b a))) -> ()
 
-reverseo([], R, R).
-reverseo([H|T], Acc, R) :- reverseo(T, [H|Acc], R).
+reverseo([], []).
+reverseo([X], [X]).
+reverseo(List, Result) :- reverse(List, Result).
 
 % Queries de ejemplo:
-% ?- reverseo([a, b, c, d], X).
-% X = [d, c, b, a].
-% ?- reverseo(X, [a, b, c, d]).
-% X = [d, c, b, a].
-% ?- reverseo([a, b, c, d], [e, d, c, b, a]).
-% false.
+% ?- reverseo([1, 2, 3, 4], X).
+% X = [4, 3, 2, 1].
+% ?- reverseo(X, [a,b,c,d,e]).
+% X = [e, d, c, b, a] .
 
 # Ejercicio 7
 
@@ -228,6 +227,8 @@ equalo([_]).
 equalo([H, H|T]) :- equalo([H|T]).
 
 # Ejercicio 13
+
+
 
 subseto([], _). %13
 subseto([H|T], B) :- member(H, B), subseto(T, B). %13
