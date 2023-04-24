@@ -228,7 +228,19 @@ equalo([H, H|T]) :- equalo([H|T]).
 
 # Ejercicio 13
 
+# (subseto a b): Funci ́on l ́ogica que tiene ́exito si todos los elementos de la lista a 
+# son miembros a su vez tambien de la lista b.
 
+# Ejemplo de uso:
+
+# run 1 (q) (subseto '(b d) '(a b c d e)) (== q 'yes))
+# ⇒ (yes)
+# (run 1 (q) (subseto '(a b c d) '(a b c d)) (== q 'yes))
+# ⇒ (yes)
+# (run 1 (q) (subseto '(a b c d e) '(a b c d)) (== q 'yes))
+# ⇒ ()
+# (run 3 (q) (subseto q '(a b c d)))
+# ⇒ (() (a) (b))
 
 subseto([], _). %13
 subseto([H|T], B) :- member(H, B), subseto(T, B). %13
@@ -239,10 +251,28 @@ subseto([H|T], B) :- member(H, B), subseto(T, B). %13
 
 # Ejercicio 14
 
-compresso_helper([], Acc, R) :- reverse(Acc, R).
-compresso_helper([X], Acc, R) :- reverse([X|Acc], R).
-compresso_helper([X, X|T], Acc, R) :- compresso_helper([X|T], Acc, R).
-compresso_helper([X, Y|T], Acc, R) :- dif(X, Y), compresso_helper([Y|T], [X|Acc], R).
+# (compresso lst result): Funci ́on l ́ogica que tiene  ́exito si result tiene los mismos
+# elementos que lst excepto que si algunos de estos est ́an repetidos de manera consecutivos 
+# se reemplazan por una sola instancia. El orden de los elementos no debe modificarse.
+
+# Ejemplo de uso:
+
+# (run 1 (q) (compress '(a a a a b c c a a d e e e e) q))
+# ⇒ ((a b c a d e))
+# (run 1 (q) (compress '(a b c d) q))
+# ⇒ ((a b c d))
+# (run 1 (q) (compress '(a a a a a a a a a a) q))
+# ⇒ ((a))
+# (run 5 (q) (compress q '(a b)))
+# ⇒ ((a b) (a a b) (a b b) (a a a b) (a a b b))
+# 5
+
+
+compresso([], []).
+compresso([X], [X]).
+compresso([X, X|T], R) :- compresso([X|T], R).
+compresso([X, Y|T], [X|R]) :- dif(X, Y), compresso([Y|T], R).
+
 
 % Queries de ejemplo:
 % ?- compresso([1, 1, 1, 2, 2, 3, 4, 4, 4, 4], X).
