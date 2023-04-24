@@ -74,12 +74,15 @@ removeo(X, [Head|Tail], [Head|Result]) :- removeo(X, Tail, Result).
 
 # Ejercicio 6
 
-reverseo_helper([], Acc, Acc).
-reverseo_helper([H|T], Acc, R) :- reverseo_helper(T, [H|Acc], R).
+reverseo([], []).
+reverseo([X], [X]).
+reverseo(List, Result) :- reverse(List, Result).
 
 % Queries de ejemplo:
 % ?- reverseo([1, 2, 3, 4], X).
 % X = [4, 3, 2, 1].
+% ?- reverseo(X, [a,b,c,d,e]).
+% X = [e, d, c, b, a] .
 
 # Ejercicio 7
 
