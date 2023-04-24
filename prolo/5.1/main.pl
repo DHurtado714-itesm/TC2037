@@ -20,10 +20,6 @@
 lasto([], X) :- X = [].
 lasto([_|T], X) :- lasto(T, X).
 
-% Queries de ejemplo
-% lasto([1,2,3,4], Result)
-% Result = 4.
-
 # Ejericio 2
 
 # (butlasto lst result): Funcion logica que tiene exito si result contiene los mismos elementos
@@ -35,71 +31,121 @@ lasto([_|T], X) :- lasto(T, X).
 # (run 1 (q) (butlasto '(1 2 3 4) '(1 2 3 4))) -> ()
 # (run 3 (p q) (butlasto p q)) -> (((_.0) ()) ((_.0 _.1) (_.0)) ((_.0 _.1 _.2) (_.0 _.1)))
 
-lasto([X], X).
-
-lasto([_|Tail], X) :- lasto(Tail, X). 
-
-
-% Queries de ejemplo:
-% ?- butlasto([1, 2, 3, 4], X).
-% X = [1, 2, 3].
+butlasto([_], []).
+butlasto([H|T], [H|R]) :- butlasto(T, R).
 
 # Ejercicio 3
+
+# (enlisto lst result): Funcion logica que tiene  ́exito si result contiene 
+# los mismos elementos que lst pero cada uno colacado dentro de una lista.
+
+# Ejemplo de uso:
+# (run 1 (q) (enlisto '(a b c d e) q)) -> (((a) (b) (c) (d) (e)))
+# (run 1 (q) (enlisto q '(a b c d e))) -> ()
+# (run 1 (q) (enlisto q '((a) (b) (c) (d) (e)))) -> ((a b c d e))
+# (run 3 (p q) (enlisto p q)) -> ((() ()) ((_.0) ((_.0))) ((_.0 _.1) ((_.0) (_.1))))
 
 enlisto([], []). 
 enlisto([Head|Tail], [[Head]|Result]) :- enlisto(Tail, Result). 
 
-% Queries de ejemplo:
-% enlisto(q, [[a],[b],[c],[d]]).
-% false
-
 # Ejercicio 4
+
+# (duplicateo lst result): Funcion logica que tiene exito si cada elemento en lst 
+# aparece duplicado en result.
+
+# Ejemplo de uso:
+
+# (run 1 (q) (duplicateo '(1 2 3 4) q)) -> ((1 1 2 2 3 3 4 4))
+# (run 1 (q) (duplicateo q '(a a b b c c))) -> ((a b c))
+# (run 1 (q) (duplicateo q '(a a b b c c d))) -> ()
+# (run 3 (p q) (duplicateo p q)) -> ((() ()) ((_.0) ((_.0))) ((_.0 _.1) ((_.0 _.1))))
 
 duplicateo([], []).
 duplicateo([H|T], [H, H|R]) :- duplicateo(T, R).
 
 % Queries de ejemplo:
-% ?- duplicateo([1, 2, 3], X).
-% X = [1, 1, 2, 2, 3, 3].
+% ?- duplicateo([1, 2, 3 4], X).
+% X = [1, 1, 2, 2, 3, 3, 4, 4].
 
 # Ejercicio 5
+
+# (removeo x lst result): Funcion logica que tiene exito si se puede eliminar la 
+# primera ocurrencia de x en lst obteniendo result
+
+# Ejemplo de uso:
+
+# (run 1 (q) (removeo 3 '(1 2 3 4) q)) -> ((1 2 4))
+# (run 1 (q) (removeo 5 '(1 2 3 4) q)) -> ()
+# (run 1 (q) (removeo q '(1 2 3 4) '(1 2 4))) -> (3)
+# (run 5 (q) (removeo 0 q '(1 2 3 4))) -> ((0 1 2 3 4) (1 0 2 3 4) (1 2 0 3 4) (1 2 3 0 4) (1 2 3 4 0))
+# (run* (p q) (removeo p '(1 2 3 4) q)) -> ((1 (2 3 4)) (2 (1 3 4)) (3 (1 2 4)) (4 (1 2 3)))
 
 removeo(_, [], []).
 removeo(X, [X|T], T). 
 removeo(X, [Head|Tail], [Head|Result]) :- removeo(X, Tail, Result). 
 
-% Queries de ejemplo
-% ?- removeo(3, [1, 2, 3, 4, 5], Result).
-% Result = [1, 2, 4, 5] 
+# ------------------------------
+# Aqui llegue
+# ------------------------------
 
 # Ejercicio 6
 
-reverseo_helper([], Acc, Acc).
-reverseo_helper([H|T], Acc, R) :- reverseo_helper(T, [H|Acc], R).
+# (reverseo lst result): Funci ́on l ́ogica que tiene  ́exito si result es la reversa de lst.
+
+# Ejemplo de uso:
+
+# (run 1 (q) (reverseo '(a b c d) q)) -> ((d c b a))
+# (run 1 (q) (reverseo q '(a b c d))) -> ((d c b a))
+# (run 1 (q) (reverseo '(a b c d) '(e d c b a))) -> ()
+
+reverseo([], R, R).
+reverseo([H|T], Acc, R) :- reverseo(T, [H|Acc], R).
 
 % Queries de ejemplo:
-% ?- reverseo([1, 2, 3, 4], X).
-% X = [4, 3, 2, 1].
+% ?- reverseo([a, b, c, d], X).
+% X = [d, c, b, a].
+% ?- reverseo(X, [a, b, c, d]).
+% X = [d, c, b, a].
+% ?- reverseo([a, b, c, d], [e, d, c, b, a]).
+% false.
 
 # Ejercicio 7
+
+# (palindromeo lst): Funcion logica que tiene exito si lst es un palındromo 
+# (se lee igual de izquierda a derecha que de derecha a izquierda).
 
 palindromeo([]). 
 palindromeo([_]). 
 palindromeo(List) :- reverse(List, List).
 
-% Queries de ejemplo:
-% ?- palindromeo([a,b,c,d,c,b,a]).true.
-% ?- palindromeo([a,b,c,d,e,f,g]).false.
-
 # Ejercicio 8
+
+# (rotateo lst result): Funcion logica que tiene exito cuando result es el resultado 
+# de girar lst hacia la izquierda una posicion. En otras palabras, el primer elemento 
+# de lst se convierte en el ultimo elemento de result
+
+# Ejemplo de uso:
+
+# (run 1 (q) (rotateo '(a b c d e) q)) -> ((b c d e a))
+# (run 1 (q) (rotateo q '(a b c d e))) -> ((e a b c d))
+# (run 1 (q) (rotateo '(a b c d e) '(a b c d e))) -> ()
 
 rotateo([H|T], R) :- append(T, [H], R).
 
-% Queries de ejemplo:
-% ?- rotateo([1, 2, 3, 4], X).
-% X = [2, 3, 4, 1].
-
 # Ejercicio 9
+
+# (evensizeo lst) y (oddsizeo lst): Estas dos funciones logicas deben definirse de 
+# manera mutuamente recursiva. Es decir, cada una debe definirse en terminos de la otra. 
+# Estas funciones tienen exito si el numero de elementos en lst es par o impar, 
+# respectivamente.
+
+# Ejemplo de uso:
+
+# (run 1 (q) (evensizeo '(a b c d)) (== q 'yes)) ⇒ (yes)
+# (run 1 (q) (oddsizeo '(a b c)) (== q 'yes)) ⇒ (yes)
+# (run 1 (q) (oddsizeo '(a b c d)) (== q 'yes) ⇒ ()
+# (run 4 (q) (evensizeo q)) ⇒ (() (_.0 _.1) (_.0 _.1 _.2 _.3) (_.0 _.1 _.2 _.3 _.4 _.5))
+
 
 evensizeo([]). %9
 evensizeo([_|T]) :- oddsizeo(T). %9
@@ -107,18 +153,22 @@ evensizeo([_|T]) :- oddsizeo(T). %9
 oddsizeo([_]). %9
 oddsizeo([_|T]) :- evensizeo(T). %9
 
-% Queries de ejemplo
-% ?- evensizeo([a, b, c, d, e]).false.
-
-% ?- evensizeo([a, b, c, d]).true .
-
-% ?- oddsizeo([a,b,c,d,e]).
-% true .
-
-% ?- oddsizeo([a,b,c,d]).
-% false.
-
 # Ejercicio 10
+
+# (splito lst a b): Funci ́on l ́ogica que tiene  ́exito cuando al dividir lst se obtiene 
+# a y b. Los elementos primero, tercero, quinto, etc. de lst van en a, mientras que los 
+# elementos segundo, cuarto, sexto, etc. van en b.
+
+# Ejemplo de uso:
+
+# (run 1 (p q) (splito '(a 1 b 2 c 3 d 4 e) p q))
+# ⇒ (((a b c d e) (1 2 3 4)))
+# (run 1 (q) (splito q '(a b c d e) '(1 2 3 4)))
+# ⇒ ((a 1 b 2 c 3 d 4 e))
+# (run 1 (q) (splito '(a b c) '(a b c) q))
+# ⇒ ()
+# (run 1 (q) (splito '(a b c) '(a c) q))
+# ⇒ ((b))
 
 splito([], [], []).
 splito([X], [X], []).
@@ -129,6 +179,22 @@ splito([X, Y|T], [X|R1], [Y|R2]) :- splito(T, R1, R2).
 % A = [1, 3, 5], B = [2, 4].
 
 # Ejercicio 11
+
+# (swappero a b lst result): Funci ́on l ́ogica que tiene  ́exito solo si result contiene 
+# los mismos elementos que lst excepto que cada ocurrencia de a se intercambia por b, 
+# y viceversa
+
+# Ejemplo de uso:
+
+# run 1 (q) (swappero 'a 'b '(a b a b b b a) q))
+# ⇒ ((b a b a a a b))
+# (run 1 (q) (swappero 'a 'b q '()))
+# ⇒ (()))
+# (run 1 (q) (swappero 'purr
+# 'kitty
+# '(soft kitty warm kitty little ball of fur
+# happy kitty sleepy kitty purr purr purr) q))
+# ⇒ ((soft purr warm purr little ball of fur happy purr sleepy purr kitty kitty kitty))
 
 swappero(_, _, [], []). 
 swappero(A, B, [A|T], [B|R]) :- swappero(A, B, T, R). 
@@ -143,15 +209,23 @@ swappero(A, B, [H|T], [H|R]) :- dif(H, A), dif(H, B), swappero(A, B, T, R).
 
 # Ejercicio 12
 
+# (equalo lst): Funcion logica que tiene exito solo si todos los elementos contenidos 
+# en lst se unifican con el mismo valor. La funci ́on siempre debe tener exito si lst 
+# esta vacia o tiene un solo elemento.
+
+# Ejemplo de uso:
+# (run* (q) (equalo '()) (== q 'yes))
+# ⇒ (yes)
+# (run 1 (q) (equalo '(a a a a a a)) (== q 'yes))
+# ⇒ (yes)
+# (run 1 (q) (equalo '(a a a a b a)) (== q 'yes))
+# ⇒ ()
+# (run 5 (q) (equalo q))
+# ⇒ (() (_.0) (_.0 _.0) (_.0 _.0 _.0) (_.0 _.0 _.0 _.0))
+
 equalo([]).
 equalo([_]).
 equalo([H, H|T]) :- equalo([H|T]).
-
-% Queries de ejemplo:
-% ?- equalo([1, 1, 1, 1]).
-% true.
-% ?- equalo([1, 1, 1, 2]).
-% false.
 
 # Ejercicio 13
 
