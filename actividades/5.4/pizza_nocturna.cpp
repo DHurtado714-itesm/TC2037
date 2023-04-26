@@ -42,7 +42,7 @@ void *studentFunction(void *idPtr) {
 
             // Study while eating the pizza
             cout << "Student " << id << " is eating a slice of pizza. Remaining slices: " << remainingSlices << endl;
-            usleep((rand() % 1000) * 1000);
+            this_thread::sleep_for(chrono::milliseconds(rand() % 1000));
             cout << "Student " << id << " has finished eating a slice of pizza." << endl;
         } else {
             pthread_mutex_unlock(&mutexPizza);
