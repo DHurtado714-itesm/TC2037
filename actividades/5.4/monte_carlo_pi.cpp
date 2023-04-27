@@ -98,3 +98,18 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+/*
+
+Implementacion de semaforo:
+
+El código proporcionado utiliza un semáforo implícito en la función pthread_join. 
+La función pthread_join se utiliza para esperar a que un hilo se complete antes de 
+continuar con el hilo principal. Tambien se utiliza un semáforo para evitar que varios 
+hilos generen el mismo número aleatorio al mismo tiempo.
+
+En general, se pueden utilizar semáforos explícitos en situaciones en las que varios 
+hilos necesitan acceder a recursos compartidos y se debe evitar que los hilos accedan 
+a los recursos compartidos al mismo tiempo.
+
+*/
