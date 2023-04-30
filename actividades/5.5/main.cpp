@@ -126,3 +126,14 @@ int main() {
     return 0;
 }
 
+/*
+En el código se emplean dos semáforos condicionales, north_cv y south_cv, y un semáforo mutex bridge_mutex.
+
+El semáforo mutex bridge_mutex es utilizado para asegurarse de que solamente un hilo puede ejecutar el código  para controlar la entrada y 
+salida de vehículos en el puente. Los hilos obtienen el bloqueo del semáforo mutex mediante la función pthread_mutex_lock(), y lo liberan con 
+la función pthread_mutex_unlock().
+
+Los semáforos condicionales north_cv y south_cv son utilizados para que los hilos esperen  que los vehículos de una dirección se detengan, si
+hay vehículos en la otra dirección en el puente, o si el puente ya está lleno. Los hilos esperan en estas condiciones utilizando la función pthread_cond_wait(). Cuando se cumple la condición, se envía una señal a los hilos que esperan en el semáforo condicional correspondiente utilizando la función pthread_cond_signal().
+
+*/
