@@ -1,3 +1,13 @@
+/*
+
+    Authors: 
+        - Daniel Hurtado (A01707774)
+        - Carlos Velasco (A01708634)
+
+
+*/
+
+
 #include <iostream>
 #include <pthread.h>
 #include <unistd.h>
