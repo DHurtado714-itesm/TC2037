@@ -42,3 +42,13 @@ f ́ormula:
 
 */
 
+Resultados obtenidos:
+
+Suma de primos (paralela): 838596693108                          
+Tiempo paralelo: 1.985 segundos
+
+Suma de primos: 838596693108
+Tiempo secuencial: 18.206 segundos
+
+Hubo una mejora del 917,2 % con respecto a la ejecucion secuencial.
+
