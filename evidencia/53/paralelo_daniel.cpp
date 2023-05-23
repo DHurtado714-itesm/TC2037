@@ -6,9 +6,15 @@
 #include <algorithm>
 #include <iostream>
 #include <ctime>
-#include "utils.h"
+// #include "utils.h"
 #include <dirent.h>
 #include <sys/stat.h>
+#include <pthread.h>
+
+#include <time.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 
 // Definición de las categorías léxicas
@@ -128,26 +134,59 @@ void csharp_to_html(std::string input_file_name, std::string output_file_name) {
     output_file << "\n</pre>\n</body>\n</html>";
 }
 
+const int NUM_THREADS = 8; // El número de hilos a usar. Esto debe ser ajustado de acuerdo a tus necesidades.
+
+struct ThreadData {
+    std::string input_file_name;
+    std::string output_file_name;
+};
+
+void* process_file(void* thread_data) {
+    ThreadData* data = static_cast<ThreadData*>(thread_data);
+    csharp_to_html(data->input_file_name, data->output_file_name);
+    pthread_exit(NULL);
+}
+
 int main() {
-      // Crear el directorio de salida si no existe
     struct stat st = {0};
-    if (stat("./output_secuencial", &st) == -1) {
-        mkdir("./output_secuencial");
+    if (stat("./output_paralelo", &st) == -1) {
+        mkdir("./output_paralelo");
     }
     std::clock_t inicio = std::clock();
     DIR* dirp = opendir("./csharp_examples");
     struct dirent * dp;
+    pthread_t threads[NUM_THREADS];
+    ThreadData thread_data[NUM_THREADS];
+    int thread_count = 0;
+
+
     while ((dp = readdir(dirp)) != NULL) {
         std::string filename = dp->d_name;
         if (filename.length() >= 3 && filename.substr(filename.length() - 3) == ".cs") {
-            csharp_to_html("./csharp_examples/" + filename, "./output_secuencial/" + filename + ".html");
+            thread_data[thread_count].input_file_name = "./csharp_examples/" + filename;
+            thread_data[thread_count].output_file_name = "./output_paralelo/" + filename + ".html";
+            pthread_create(&threads[thread_count], NULL, process_file, static_cast<void*>(&thread_data[thread_count]));
+            thread_count++;
+
+            if (thread_count >= NUM_THREADS) {
+                for (int i = 0; i < NUM_THREADS; i++) {
+                    pthread_join(threads[i], NULL);
+                }
+                thread_count = 0;
+            }
         }
     }
-    closedir(dirp);
-    std::clock_t fin = std::clock();
-    double tiempo_secuencial = double(fin - inicio) / CLOCKS_PER_SEC;
+    
+    // Si hay hilos restantes por unir después de salir del bucle
+    for (int i = 0; i < thread_count; i++) {
+        pthread_join(threads[i], NULL);
+    }
 
-    std::cout << "Tiempo secuencial: " << tiempo_secuencial << " segundos" << std::endl;
+    closedir(dirp);
+
+    std::clock_t fin = std::clock();
+    double tiempo_paralelo = double(fin - inicio) / CLOCKS_PER_SEC;
+    std::cout << "Tiempo paralelo: " << tiempo_paralelo << " segundos" << std::endl;
 
     return 0;
 }

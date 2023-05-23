@@ -3,6 +3,9 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <dirent.h>
+#include <sys/stat.h>
+
 
 #define NUM_THREADS 4
 #define MAX_QUEUE_SIZE 10
