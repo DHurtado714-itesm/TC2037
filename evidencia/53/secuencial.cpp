@@ -15,6 +15,7 @@
 std::vector<std::string> reserved_words = {"abstract", "as", "base", "bool", "byte", "catch", "char", "checked", "class", "const", "decimal", "delegate", "double", "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "implicit", "in", "int", "interface", "internal", "is", "lock", "long", "namespace", "new", "null", "object", "operator", "out", "override", "params", "private", "protected", "public", "readonly", "ref", "sbyte", "sealed", "short", "sizeof", "stackalloc", "static", "string", "struct", "this", "throw", "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual", "void", "volatile", "#if", "#endif", "#else"};
 std::vector<std::string> operators = {"+", "-", "*", "/", "%", "^", "&", "|", "~", "!", "=", "<", ">", "?", ":", ";", ",", ".", "++", "--", "&&", "||", "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "^=", "&=", "|=", "<<=", ">>=", "=>", "??"};
 std::vector<std::string> delimiters = {"(", ")", "{", "}", "[", "]"};
+std::vector<std::string> loops_conditionals = {"for", "foreach", "while", "do", "if", "else", "switch", "case", "default", "break", "continue", "return"};
 
 // Función para clasificar un token según su tipo
 std::string classify_token(std::string token) {
@@ -24,6 +25,8 @@ std::string classify_token(std::string token) {
         return "operator";
     } else if (std::find(delimiters.begin(), delimiters.end(), token) != delimiters.end()) {
         return "delimiter";
+    } else if (std::find(loops_conditionals.begin(), loops_conditionals.end(), token) != loops_conditionals.end()) {
+        return "loops-conditionals";
     } else if (std::regex_match(token, std::regex("^[a-zA-Z_][a-zA-Z0-9_]*$"))) {
         return "identifier";
     } else if (std::regex_match(token, std::regex("^[0-9]+$"))) {
@@ -65,6 +68,8 @@ std::string highlight_token(std::string token, std::string token_type) {
         return "<span class=\"operator\">" + token + "</span>";
     } else if (token_type == "delimiter") {
         return "<span class=\"delimiter\">" + token + "</span>";
+    } else if (token_type == "loops-conditonals"){
+        return "<span class=\"lopps-condtionals\">" + token + "</span>";
     } else if (token_type == "identifier") {
         return "<span class=\"identifier\">" + token + "</span>";
     } else if (token_type == "integer") {
