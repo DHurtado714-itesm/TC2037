@@ -5,6 +5,10 @@
 #include <regex>
 #include <algorithm>
 #include <iostream>
+#include <ctime>
+#include "utils.h"
+#include <dirent.h>
+#include <sys/stat.h>
 
 
 // Definición de las categorías léxicas
@@ -121,13 +125,26 @@ void csharp_to_html(std::string input_file_name, std::string output_file_name) {
     output_file << "\n</pre>\n</body>\n</html>";
 }
 
-
 int main() {
-    std::vector<std::string> filenames = {"code01.cs"};
-    for (std::string filename : filenames) {
-        csharp_to_html(filename, filename + ".html");
+      // Crear el directorio de salida si no existe
+    struct stat st = {0};
+    if (stat("./output", &st) == -1) {
+        mkdir("./output");
     }
+    std::clock_t inicio = std::clock();
+    DIR* dirp = opendir("./csharp_examples");
+    struct dirent * dp;
+    while ((dp = readdir(dirp)) != NULL) {
+        std::string filename = dp->d_name;
+        if (filename.length() >= 3 && filename.substr(filename.length() - 3) == ".cs") {
+            csharp_to_html("./csharp_examples/" + filename, "./output/" + filename + ".html");
+        }
+    }
+    closedir(dirp);
+    std::clock_t fin = std::clock();
+    double tiempo_secuencial = double(fin - inicio) / CLOCKS_PER_SEC;
+
+    std::cout << "Tiempo secuencial: " << tiempo_secuencial << " segundos" << std::endl;
+
     return 0;
 }
-
-
