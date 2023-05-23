@@ -5,7 +5,6 @@
 #include <regex>
 #include <algorithm>
 #include <iostream>
-#include <filesystem>
 
 
 // Definición de las categorías léxicas
@@ -41,8 +40,21 @@ std::string classify_token(std::string token) {
 }
 
 // Función para resaltar el token
-std::string highlight_token(std::string token, std::string token_type) {
+// Función para tokenizar una línea
+std::vector<std::string> tokenize_line(std::string line) {
+    std::vector<std::string> tokens;
+    std::regex token_regex("([a-zA-Z_][a-zA-Z0-9_]*|//.*|/\\*.*|.*?\\*/|\\d+\\.?\\d*|\".*?\"|\\s+|\\S)");
+    std::sregex_iterator it(line.begin(), line.end(), token_regex);
+    std::sregex_iterator reg_end;
+    for (; it != reg_end; ++it) {
+        tokens.push_back(it->str());
+    }
+    tokens.push_back("\n"); // Añade un salto de línea al final de cada línea
+    return tokens;
+}
 
+// Función para resaltar el token
+std::string highlight_token(std::string token, std::string token_type) {
     if (token_type == "reserved-word") {
         return "<span class=\"reserved-word\">" + token + "</span>";
     } else if (token_type == "operator") {
@@ -59,21 +71,13 @@ std::string highlight_token(std::string token, std::string token_type) {
         return "<span class=\"string\">" + token + "</span>";
     } else if (token_type == "comment" || token_type == "block-comment-start" || token_type == "block-comment-end") {
         return "<span class=\"comment\">" + token + "</span>";
+    } else if (token == "\n") {
+        return "<br>";
+    } else if (std::regex_match(token, std::regex("\\s+"))) {
+        return "<span class=\"whitespace\">" + token + "</span>";
     } else {
         return token;
     }
-}
-
-// Función para tokenizar una línea
-std::vector<std::string> tokenize_line(std::string line) {
-    std::vector<std::string> tokens;
-    std::regex token_regex("([a-zA-Z_][a-zA-Z0-9_]*|//.*|/\\*.*|.*?\\*/|\\d+\\.?\\d*|\".*?\"|\\S)");
-    std::sregex_iterator it(line.begin(), line.end(), token_regex);
-    std::sregex_iterator reg_end;
-    for (; it != reg_end; ++it) {
-        tokens.push_back(it->str());
-    }
-    return tokens;
 }
 
 // Función para tokenizar un archivo
@@ -103,20 +107,27 @@ std::string tokenize_csharp(std::string input) {
 void csharp_to_html(std::string input_file_name, std::string output_file_name) {
     std::string highlighted_code = tokenize_csharp(input_file_name);
     std::ofstream output_file(output_file_name);
-    output_file << "<!DOCTYPE html>\n<html>\n<body>\n<pre>\n";
+    output_file << "<!DOCTYPE html>\n<html>\n<head>\n<style>\n";
+    output_file << ".reserved-word { color: blue; }\n";
+    output_file << ".operator { color: red; }\n";
+    output_file << ".delimiter { color: green; }\n";
+    output_file << ".identifier { color: black; }\n";
+    output_file << ".integer { color: orange; }\n";
+    output_file << ".float { color: purple; }\n";
+    output_file << ".string { color: brown; }\n";
+    output_file << ".comment { color: gray; }\n";
+    output_file << "</style>\n</head>\n<body>\n<pre>\n";
     output_file << highlighted_code;
     output_file << "\n</pre>\n</body>\n</html>";
 }
 
+
 int main() {
-    std::string path = "./csharp_examples";
-    for (const auto & entry : std::filesystem::directory_iterator(path)) {
-        if (entry.path().extension() == ".cs") {
-            csharp_to_html(entry.path().string(), entry.path().string() + ".html");
-        }
+    std::vector<std::string> filenames = {"code01.cs"};
+    for (std::string filename : filenames) {
+        csharp_to_html(filename, filename + ".html");
     }
     return 0;
 }
-
 
 
