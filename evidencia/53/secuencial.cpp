@@ -68,8 +68,8 @@ std::string highlight_token(std::string token, std::string token_type) {
         return "<span class=\"operator\">" + token + "</span>";
     } else if (token_type == "delimiter") {
         return "<span class=\"delimiter\">" + token + "</span>";
-    } else if (token_type == "loops-conditonals"){
-        return "<span class=\"lopps-condtionals\">" + token + "</span>";
+    } else if (token_type == "loops-conditionals"){
+        return "<span class=\"loops-conditionals\">" + token + "</span>";
     } else if (token_type == "identifier") {
         return "<span class=\"identifier\">" + token + "</span>";
     } else if (token_type == "integer") {
@@ -125,9 +125,9 @@ void csharp_to_html(std::string input_file_name, std::string output_file_name) {
     output_file << ".integer { color: #A8DC03; }\n";
     output_file << ".float { color: #A8DC03; }\n";
     output_file << ".string { color: #E39000; }\n";
-    output_file << ".comment { color: green; }\n";
+    output_file << ".comment { color: rgb(96, 96, 96); }\n";
     output_file << ".loops-conditionals { color: magenta; }\n";
-    output_file << "html { background-color: black; }\n";
+    output_file << "html { background-color: rgb(36, 36, 36); }\n";
     output_file << "</style>\n</head>\n<body>\n<pre>\n";
     output_file << highlighted_code;
     output_file << "\n</pre>\n</body>\n</html>";
